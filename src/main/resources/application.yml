@@ -1,1 +1,3 @@
-
+logging:
+  level:
+    com.cn.acl.feign.SellerFeignClient: Debug

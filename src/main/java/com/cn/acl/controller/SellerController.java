@@ -7,6 +7,7 @@ import com.cn.acl.client.SellerClient;
 import com.cn.acl.common.Result;
 import com.cn.acl.dto.SellerDTO;
 import com.cn.acl.dto.SellerRpcDTO;
+import com.cn.acl.query.SellerQuery;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,8 @@ public class SellerController {
      */
     @GetMapping("/client/{url}")
     public Result<SellerDTO> getFeignSeller(@PathVariable String url) {
-        return sellerClient.getSellerDTO(url);
+        SellerQuery query = new SellerQuery(url);
+        return sellerClient.getSellerDTO(query);
     }
 
 }
