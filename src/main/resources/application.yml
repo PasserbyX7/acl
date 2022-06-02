@@ -1,3 +1,13 @@
 logging:
   level:
-    com.cn.acl.feign.SellerFeignClient: Debug
+    com:
+      cn:
+        acl:
+          feign:
+            SellerFeignClient: Debug
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 3000

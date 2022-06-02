@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    RPC_GET_SELLER_ERROR(000001, "rpc get seller error");
+    SYS_ERROR(000001, "system error"),
+    RPC_GET_SELLER_ERROR(000002, "rpc get seller error");
 
     private Integer code;
     private String msg;

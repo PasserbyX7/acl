@@ -2,12 +2,14 @@ package com.cn.acl.aspect;
 
 import java.lang.reflect.Method;
 
+import com.cn.acl.annotation.RpcMonitoring;
 import com.cn.acl.common.Result;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -15,8 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Aspect
+@Order(1)
 @Component
-public class RpcMonitorAspect {
+public class RpcMonitoringAspect {
     /**
      * 打印Rpc入参出参与调用耗时
      * 上报调用耗时及错误率
@@ -25,10 +28,8 @@ public class RpcMonitorAspect {
      * @return
      * @throws Throwable
      */
-    @Around("@annotation(com.cn.acl.annotation.RpcMonitoring)")
-    public Object rpcMonitor(ProceedingJoinPoint pjp) throws Throwable {
-        // TODO 调用耗时上报
-        // TODO 错误率上报
+    @Around("@annotation(rpcMonitoring)")
+    public Object rpcMonitor(ProceedingJoinPoint pjp, RpcMonitoring rpcMonitoring) throws Throwable {
         Method method = getPjpMethod(pjp);
         StopWatch sw = new StopWatch();
         Object ret = null;
@@ -41,8 +42,11 @@ public class RpcMonitorAspect {
             sw.stop();
             long time = sw.getTotalTimeMillis();
             log.info("[{}#{}] <--- Ret[{}] ({}ms)", method.getDeclaringClass().getName(), method.getName(), ret, time);
-            if (ret != null && ret instanceof Result && ((Result<?>) ret).getCode() != 0) {
-                log.info("调用失败：上报监控");
+            // TODO 调用耗时上报
+            boolean hasError = ret != null && ret instanceof Result && ((Result<?>) ret).getCode() != 0;
+            if (hasError) {
+                // TODO 错误上报
+                log.info("{}调用失败", rpcMonitoring.value());
             }
         }
     }
